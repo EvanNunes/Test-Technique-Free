@@ -6,6 +6,7 @@ use App\Repository\AntennaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AntennaRepository::class)]
 class Antenna
@@ -13,12 +14,15 @@ class Antenna
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['antenna:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['antenna:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['antenna:read'])]
     private ?string $city = null;
 
     /**
@@ -69,6 +73,12 @@ class Antenna
         return $this->interventions;
     }
 
+    #[Groups(['antenna:read'])]
+    public function getLastIntervention(): Intervention|false
+    {
+        return $this->interventions->last();
+    }
+
     public function addIntervention(Intervention $intervention): static
     {
         if (!$this->interventions->contains($intervention)) {
@@ -82,7 +92,6 @@ class Antenna
     public function removeIntervention(Intervention $intervention): static
     {
         if ($this->interventions->removeElement($intervention)) {
-            // set the owning side to null (unless already changed)
             if ($intervention->getAntennaId() === $this) {
                 $intervention->setAntennaId(null);
             }

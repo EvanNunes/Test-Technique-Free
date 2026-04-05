@@ -2,18 +2,18 @@
 
 namespace App\Controller;
 
+use App\Repository\AntennaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class AntennaController extends AbstractController
 {
-    #[Route('/antenna', name: 'app_antenna')]
-    public function index(): JsonResponse
+    #[Route('/api/antennas', name: 'api_antennas', methods: ['GET'])]
+    public function index(AntennaRepository $antennaRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/AntennaController.php',
-        ]);
+        $antennas = $antennaRepository->findAll();
+
+        return $this->json($antennas, 200, [], ['groups' => ['antenna:read']]);
     }
 }
