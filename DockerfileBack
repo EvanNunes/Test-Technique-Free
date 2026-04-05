@@ -1,0 +1,27 @@
+FROM php:8.5-apache
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpq-dev \
+    libicu-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    intl \
+    zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN a2enmod rewrite
+RUN echo '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+WORKDIR /var/www/html
+EXPOSE 80

@@ -1,0 +1,49 @@
+services:
+  back:
+    build:
+      context: .
+      dockerfile: DockerfileBack
+    container_name: web_back
+    ports:
+      - "80:80"
+    volumes:
+      - ./back:/var/www/html
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/tech_bd
+    restart: unless-stopped
+
+  front:
+    build:
+      context: .
+      dockerfile: DockerfileFront
+    container_name: web_front
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front:/app
+      - front_node_modules:/app/node_modules
+    depends_on:
+      - back
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:80
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tech_bd
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+
+volumes:
+  postgres_data:
+  front_node_modules:
