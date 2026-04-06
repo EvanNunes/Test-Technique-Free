@@ -16,7 +16,7 @@ final class InterventionController extends AbstractController
 {
 
     #[Route('/api/intervention', name: 'api_intervention', methods: ['POST'])]
-    public function intervention(InterventionRepository $interventionRepository, Request $request, AntennaRepository $antennaRepository, EntityManagerInterface $manager): JsonResponse
+    public function intervention(Request $request, AntennaRepository $antennaRepository, EntityManagerInterface $manager): JsonResponse
     {
 
         $body = $request->getContent() ;
@@ -49,5 +49,24 @@ final class InterventionController extends AbstractController
 
 
         return $this->json($intervention, 201, [], ['groups' => ['intervention:read']]);
+    }
+
+    #[Route('/api/intervention/{id}', name: 'api_close_intervention', methods: ['PATCH'])]
+    public function closeIntervention(InterventionRepository $interventionRepository, int $id, EntityManagerInterface $manager): JsonResponse
+    {
+
+        $intervention = $interventionRepository->find($id);
+        if (empty($intervention)) {
+            return $this->json(['error' => 'Intervention introuvable'], 400);
+        }
+        if ($intervention->getEndedAt() !== null) {
+            return $this->json(['error' => 'Intervention  deja terminée'], 400);
+        }
+
+        $intervention->setEndedAt(new \DateTimeImmutable('now'));
+        $manager->flush();
+
+
+        return $this->json($intervention, 200, [], ['groups' => ['intervention:read']]);
     }
 }
