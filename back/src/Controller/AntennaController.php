@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AntennaController extends AbstractController
 {
     #[Route('/api/antennas', name: 'api_antennas', methods: ['GET'])]
-    public function index(AntennaRepository $antennaRepository): JsonResponse
+    public function antennas(AntennaRepository $antennaRepository): JsonResponse
     {
         $antennas = $antennaRepository->findAll();
 

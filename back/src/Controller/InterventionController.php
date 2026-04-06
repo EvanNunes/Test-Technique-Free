@@ -2,18 +2,52 @@
 
 namespace App\Controller;
 
+use App\Entity\Intervention;
+use App\Repository\AntennaRepository;
+use App\Repository\InterventionRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class InterventionController extends AbstractController
 {
-    #[Route('/intervention', name: 'app_intervention')]
-    public function index(): JsonResponse
+
+    #[Route('/api/intervention', name: 'api_intervention', methods: ['POST'])]
+    public function intervention(InterventionRepository $interventionRepository, Request $request, AntennaRepository $antennaRepository, EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/InterventionController.php',
-        ]);
+
+        $body = $request->getContent() ;
+        $data = json_decode($body, true);
+
+        if (empty($data['antenna_id']) || empty($data['description'])) {
+            return $this->json(['error' => 'antenna_id et description sont requis'], 400);
+        }
+        if (strlen($data['description']) > 255) {
+            return $this->json(['error' => 'Description trop longue'], 400);
+        }
+
+        $antenna = $antennaRepository->find((int) $data['antenna_id']);
+        if (empty($antenna)) {
+            return $this->json(['error' => 'antenna introuvable'], 400);
+        }
+
+        $lastIntervention = $antenna->getLastIntervention();
+        if ($lastIntervention && $lastIntervention->getEndedAt() == null) {
+            return $this->json(['error' => 'Intervention deja en cours'], 400);
+        }
+
+        $intervention = new Intervention();
+        $intervention->setAntennaId($antenna);
+        $intervention->setDescription($data['description']);
+        $intervention->setCreatedAt(new \DateTimeImmutable('now'));
+        $manager->persist($intervention);
+        $antenna->addIntervention($intervention);
+        $manager->flush();
+
+
+        return $this->json($intervention, 201, [], ['groups' => ['intervention:read']]);
     }
 }
