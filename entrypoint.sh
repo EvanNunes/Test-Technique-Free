@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+composer install --no-interaction --optimize-autoloader
+
 until php -r "new PDO('pgsql:host=postgres;port=5432;dbname=tech_bd', 'postgres', 'postgres');" 2>/dev/null; do
     sleep 1
 done

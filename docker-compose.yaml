@@ -9,7 +9,8 @@ services:
     volumes:
       - ./back:/var/www/html
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/tech_bd
     restart: unless-stopped

@@ -10,7 +10,7 @@
 
 ## Installation
 
-Requis : les ports 80 , 3000 et 5432 libres 
+Requis : les ports 80 , 3000 et 5432 doivent être libres 
 ```bash
 docker compose up --build
 ```
@@ -18,7 +18,7 @@ docker compose up --build
 Au démarrage, Docker va automatiquement :
 1. Lancer PostgreSQL
 2. Exécuter les migrations Doctrine
-3. Charger les données de test
+3. Charger les données de test via DataFixtures
 4. Démarrer le backend Symfony et le frontend Next.js
 
 ## Accès
