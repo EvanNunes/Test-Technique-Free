@@ -14,8 +14,12 @@ class AppFixtures extends Fixture
     {
         $antennasData = [
             ['name' => 'Antenne Montpellier', 'city' => 'Montpellier'],
-            ['name' => 'Antenne Montpellier Nord', 'city' => 'Montpellier'],
+            ['name' => 'Antenne Odysseum', 'city' => 'Montpellier'],
             ['name' => 'Antenne Paris', 'city' => 'Paris'],
+            ['name' => 'Antenne Nîmes', 'city' => 'Nîmes'],
+            ['name' => 'Antenne Lyon', 'city' => 'Lyon'],
+            ['name' => 'Antenne Marseille', 'city' => 'Marseille'],
+            ['name' => 'Antenne Toulouse', 'city' => 'Toulouse'],
         ];
 
         foreach ($antennasData as $data) {
