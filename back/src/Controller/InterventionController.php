@@ -6,7 +6,6 @@ use App\Entity\Intervention;
 use App\Repository\AntennaRepository;
 use App\Repository\InterventionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +14,16 @@ use Symfony\Component\Routing\Attribute\Route;
 final class InterventionController extends AbstractController
 {
 
+    /**
+     * Crée une nouvelle intervention liée à une antenne.
+     *
+     * Valide que les champs "antenna_id" et "description" sont présents,
+     * que l'antenne existe, et qu'aucune intervention n'est déjà en cours sur celle-ci.
+     * @param Request $request
+     * @param AntennaRepository $antennaRepository
+     * @param EntityManagerInterface $manager
+     * @return JsonResponse L'intervention créée (201) ou un message d'erreur (400)
+     */
     #[Route('/api/intervention', name: 'api_intervention', methods: ['POST'])]
     public function intervention(Request $request, AntennaRepository $antennaRepository, EntityManagerInterface $manager): JsonResponse
     {
@@ -51,6 +60,16 @@ final class InterventionController extends AbstractController
         return $this->json($intervention, 201, [], ['groups' => ['intervention:read']]);
     }
 
+    /**
+     * Clôture une intervention en cours en valorisant son champ "ended_at".
+     *
+     * Vérifie que l'intervention existe et qu'elle n'est pas déjà terminée
+     * avant de la clôturer avec la date et l'heure courantes.
+     * @param InterventionRepository $interventionRepository
+     * @param int $id
+     * @param EntityManagerInterface $manager
+     * @return JsonResponse L'intervention clôturée (200) ou un message d'erreur (400/404)
+     */
     #[Route('/api/intervention/{id}', name: 'api_close_intervention', methods: ['PATCH'])]
     public function closeIntervention(InterventionRepository $interventionRepository, int $id, EntityManagerInterface $manager): JsonResponse
     {
