@@ -12,7 +12,7 @@ class Intervention
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['antenna:read', 'intervention:read'])]
+    #[Groups(['antenna:read', 'intervention:read', 'antenna:intervention'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
@@ -20,15 +20,15 @@ class Intervention
     private ?Antenna $antenna_id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['antenna:read', 'intervention:read'])]
+    #[Groups(['antenna:read', 'intervention:read', 'antenna:intervention'])]
     private ?string $description = null;
 
     #[ORM\Column]
-    #[Groups(['antenna:read', 'intervention:read'])]
+    #[Groups(['antenna:read', 'intervention:read', 'antenna:intervention'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['antenna:read', 'intervention:read'])]
+    #[Groups(['antenna:read', 'intervention:read', 'antenna:intervention'])]
     private ?\DateTimeImmutable $ended_at = null;
 
     public function getId(): ?int

@@ -4,12 +4,20 @@ import {useState} from "react";
 import {useRouter} from 'next/navigation'
 import NewInterventionModal from "@/app/components/NewInterventionModal";
 import {useToast} from "@/app/contexts/ToastContext";
+import AntennaHistory from "@/app/components/AntennaHistory";
 
 export interface Antenna {
     id: number;
     name: string;
     city: string;
     lastIntervention: Intervention | null;
+}
+
+export interface AntennaId{
+    id: number;
+    name: string;
+    city: string;
+    interventions: Intervention[] | null;
 }
 
 export interface Intervention {
@@ -22,6 +30,7 @@ export interface Intervention {
 
 export default function AntennaList({antennas}: { antennas: Antenna[] }) {
     const [selectedAntenna, setSelectedAntenna] = useState<Antenna | null>(null)
+    const [selectedAntennaHistory, setSelectedAntennaHistory] = useState<Antenna | null>(null)
     const [search, setSearch] = useState('')
     const filtered = antennas.filter(antenna =>
         antenna.city.toLowerCase().includes(search.toLowerCase())
@@ -80,7 +89,7 @@ export default function AntennaList({antennas}: { antennas: Antenna[] }) {
                             </tr>
                         ) : filtered.map(antenna => (
                             <tr key={antenna.id} className="hover:bg-red-50 transition-colors">
-                                <td className="px-6 py-3 text-gray-400">{antenna.id}</td>
+                                <td className="px-6 py-3 text-gray-400 cursor-pointer"  onClick={() => setSelectedAntennaHistory(antenna)}>{antenna.id}</td>
                                 <td className="px-6 py-3 font-medium text-gray-800">{antenna.name}</td>
                                 <td className="px-6 py-3 text-gray-600">{antenna.city}</td>
                                 <td className="px-6 py-3 text-gray-600 max-w-xs truncate">
@@ -114,13 +123,13 @@ export default function AntennaList({antennas}: { antennas: Antenna[] }) {
 
                                             <button
                                                 onClick={() => setSelectedAntenna(antenna)}
-                                                className="px-3 py-1.5 text-xs font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                                className="px-3 py-1.5 text-xs font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
                                             >
                                                 + Intervention
                                             </button>) : (
                                             <button
                                                 onClick={() => handleClose(antenna.lastIntervention!.id)}
-                                                className="px-3 py-1.5 text-xs font-medium bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                                                className="px-3 py-1.5 text-xs font-medium bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                                             >
                                                 Clôturer
                                             </button>
@@ -138,6 +147,12 @@ export default function AntennaList({antennas}: { antennas: Antenna[] }) {
                 <NewInterventionModal
                     antenna={selectedAntenna}
                     onClose={() => setSelectedAntenna(null)}
+                />
+            )}
+            {selectedAntennaHistory && (
+                <AntennaHistory
+                    antenna={selectedAntennaHistory}
+                    onClose={() => setSelectedAntennaHistory(null)}
                 />
             )}
         </div>

@@ -14,15 +14,15 @@ class Antenna
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['antenna:read'])]
+    #[Groups(['antenna:read', 'antenna:intervention'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['antenna:read'])]
+    #[Groups(['antenna:read' , 'antenna:intervention'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['antenna:read'])]
+    #[Groups(['antenna:read', 'antenna:intervention'])]
     private ?string $city = null;
 
     /**
@@ -68,6 +68,7 @@ class Antenna
     /**
      * @return Collection<int, Intervention>
      */
+    #[Groups(['antenna:intervention'])]
     public function getInterventions(): Collection
     {
         return $this->interventions;
