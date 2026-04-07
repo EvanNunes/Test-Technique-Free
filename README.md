@@ -46,4 +46,3 @@ Au démarrage, Docker va automatiquement :
 ## Utilisation de l'IA
 
 - Utilisation de Claude comme outil d'assistance pour la réalisation du CSS
-- 

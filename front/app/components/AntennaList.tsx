@@ -89,7 +89,7 @@ export default function AntennaList({antennas}: { antennas: Antenna[] }) {
                             </tr>
                         ) : filtered.map(antenna => (
                             <tr key={antenna.id} className="hover:bg-red-50 transition-colors">
-                                <td className="px-6 py-3 text-gray-400 cursor-pointer"  onClick={() => setSelectedAntennaHistory(antenna)}>{antenna.id}</td>
+                                <td className="px-6 py-3 text-gray-400">{antenna.id}</td>
                                 <td className="px-6 py-3 font-medium text-gray-800">{antenna.name}</td>
                                 <td className="px-6 py-3 text-gray-600">{antenna.city}</td>
                                 <td className="px-6 py-3 text-gray-600 max-w-xs truncate">
@@ -129,11 +129,17 @@ export default function AntennaList({antennas}: { antennas: Antenna[] }) {
                                             </button>) : (
                                             <button
                                                 onClick={() => handleClose(antenna.lastIntervention!.id)}
-                                                className="px-3 py-1.5 text-xs font-medium bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+                                                className="px-3 py-1.5 text-xs font-medium bg-red-200 text-gray-700 rounded-lg hover:bg-red-300 transition-colors cursor-pointer"
                                             >
                                                 Clôturer
                                             </button>
                                         )}
+                                        <button
+                                            onClick={() => setSelectedAntennaHistory(antenna)}
+                                            className="px-3 py-1.5 text-xs font-medium bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+                                        >
+                                            Détail
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
